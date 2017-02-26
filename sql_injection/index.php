@@ -43,6 +43,6 @@ if( $_GET["id"] != NULL ){
 <h1>ANIMAL NUMBERS!</h1>
 <p>Give a number, get an animal!</p>
 <form action="/" method="get">
-  Name: <input type="text" name="id"><br>
+  Number: <input type="text" name="id"><br>
   <input type="submit">
 </form>
