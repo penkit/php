@@ -11,4 +11,4 @@ RUN apt-get update; \
 
 EXPOSE 80
 
-COPY index.php .
+COPY custom/index.php .
