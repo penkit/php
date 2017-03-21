@@ -1,14 +1,17 @@
-FROM php:5.6-apache
+FROM penkit/alpine:3.5
 
-WORKDIR /var/www/html
+# php setup
+ARG PHP_VERSION
+COPY php-setup.sh /usr/local/sbin/
+RUN php-setup.sh ${PHP_VERSION}
+COPY httpd.conf /etc/apache2/
+COPY PHP_LICENSE /
 
-RUN apt-get update; \
-    apt-get install -y libjpeg-dev \
-      libpng12-dev; \
-    docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-    docker-php-ext-install gd mysqli opcache; \
-    service apache2 restart;
+# application setup
+WORKDIR /var/www/localhost/htdocs
+COPY php-entrypoint.sh /usr/local/sbin/
+ENTRYPOINT ["/usr/local/sbin/php-entrypoint.sh"]
+CMD []
 
-EXPOSE 80
-
+# application code
 COPY custom/index.php .
