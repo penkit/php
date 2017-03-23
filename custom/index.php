@@ -1,9 +1,9 @@
 <?php
 // DB variables
-$user = $_ENV["MYSQL_USER"];
-$pass = $_ENV["MYSQL_PASSWORD"];
-$host = $_ENV["MYSQL_HOST"];
-$db = $_ENV["MYSQL_NAME"];
+$user = getenv("MYSQL_USER");
+$pass = getenv("MYSQL_PASSWORD");
+$host = getenv("MYSQL_HOST");
+$db = getenv("MYSQL_NAME");
 
 // Connect to DB
 $mysqli = new mysqli($host, $user, $pass, $db);
