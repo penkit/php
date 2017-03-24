@@ -1,39 +1,28 @@
-FROM php:5.6-apache
+FROM penkit/alpine:3.5
 
-# Gets WordPress version
-ARG wp_version
-ENV WP_VERSION $wp_version
+# php setup
+ARG PHP_VERSION
+COPY php-setup.sh /usr/local/sbin/
+RUN php-setup.sh ${PHP_VERSION}
 
-WORKDIR /var/www/
+# wordpress setup
+ARG WP_VERSION
+COPY wordpress/wp-setup.sh /usr/local/sbin/
+RUN wp-setup.sh ${WP_VERSION}
 
-# wp-config.php that uses ENV
-COPY wp-config.php .
+# copy licenses
+COPY PHP_LICENSE /
+COPY wordpress/WORDPRESS_LICENSE /
 
-# WP DB file
-COPY db_dump/penkit-wp-$WP_VERSION.sql db_dump/
+# configuration
+WORKDIR /var/www/localhost/htdocs
+COPY httpd.conf /etc/apache2/
+COPY wordpress/db_dump/penkit-wp-$WP_VERSION.sql /usr/local/lib/penkit-wp.sql
 
-# Entrypoint scripts
-COPY wait-for-it.sh .
-COPY wp-entrypoint.sh .
-
-RUN set -ex; \
-    apt-get update; \
-    apt-get install -y \
-      libjpeg-dev \
-      libpng12-dev \
-      mysql-client \
-      wget; \
-    rm -rf /var/lib/apt/lists/*; \
-    docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
-    docker-php-ext-install gd mysqli opcache; \
-    wget https://wordpress.org/wordpress-$WP_VERSION.tar.gz; \
-    tar -xzvf wordpress-$WP_VERSION.tar.gz; \
-    rmdir html; \
-    mv wordpress html; \
-    mv wp-config.php html/; \
-    chmod a+x \
-      wp-entrypoint.sh \ 
-      wait-for-it.sh; \
-    service apache2 restart;
-
-ENTRYPOINT ["./wp-entrypoint.sh"]
+# application setup
+COPY wordpress/wp-config.php .
+COPY php-entrypoint.sh /usr/local/sbin/
+COPY wordpress/wp-entrypoint.sh /usr/local/sbin/
+COPY wordpress/wait-for-it.sh /usr/local/sbin/
+ENTRYPOINT ["/usr/local/sbin/wp-entrypoint.sh"]
+CMD []

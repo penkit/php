@@ -1,6 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
-./wait-for-it.sh -t 45 $WP_DB_HOST:$WP_DB_PORT -- mysql -h $WP_DB_HOST -u $WP_DB_USER -p$WP_DB_PASS $WP_DB_NAME < db_dump/penkit-wp-$WP_VERSION.sql
-source /etc/apache2/envvars
-apache2 -DFOREGROUND
+# wait for mysql to be available
+wait-for-it.sh -t 45 $WP_DB_HOST:$WP_DB_PORT
+
+# preload the wordpress database
+mysql -h $WP_DB_HOST -u $WP_DB_USER -p$WP_DB_PASS $WP_DB_NAME < /usr/local/lib/penkit-wp.sql
+
+exec php-entrypoint.sh
