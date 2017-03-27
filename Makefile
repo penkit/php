@@ -20,6 +20,10 @@ build: pull/base $(addprefix build/,$(shell cat PHP_VERSIONS)) ;
 build/%:
 	$(call docker_build,$*)
 
+# target for building wordpress
+build/wordpress/4.7:
+	docker build -f wordpress/Dockerfile --build-arg PHP_VERSION=5.6.30-r0 --build-arg WP_VERSION=4.7 -t penkit/wordpress:4.7 .
+
 # targets for pulling specific (or all) versions
 pull: $(addprefix pull/,$(shell cat PHP_VERSIONS)) ;
 pull/%:
