@@ -4,11 +4,15 @@ FROM penkit/alpine:3.5
 ARG PHP_VERSION
 COPY php-setup.sh /usr/local/sbin/
 RUN php-setup.sh ${PHP_VERSION}
-COPY httpd.conf /etc/apache2/
+WORKDIR /var/www/localhost/htdocs
+
+# copy licenses
 COPY PHP_LICENSE /
 
+# configuration
+COPY httpd.conf /etc/apache2/
+
 # application setup
-WORKDIR /var/www/localhost/htdocs
 COPY php-entrypoint.sh /usr/local/sbin/
 ENTRYPOINT ["/usr/local/sbin/php-entrypoint.sh"]
 CMD []
