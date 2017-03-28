@@ -24,6 +24,10 @@ build/%:
 build/wordpress/4.7:
 	docker build -f wordpress/Dockerfile --build-arg PHP_VERSION=5.6.30-r0 --build-arg WP_VERSION=4.7 -t penkit/wordpress:4.7 .
 
+# target for building drupal
+build/drupal/7.31:
+	docker build -f drupal/Dockerfile --build-arg PHP_VERSION=5.6.30-r0 --build-arg DRUPAL_VERSION=7.31 -t penkit/drupal:7.31 .
+
 # targets for pulling specific (or all) versions
 pull: $(addprefix pull/,$(shell cat PHP_VERSIONS)) ;
 pull/%:
