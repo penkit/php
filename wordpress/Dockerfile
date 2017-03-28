@@ -4,6 +4,7 @@ FROM penkit/alpine:3.5
 ARG PHP_VERSION
 COPY php-setup.sh /usr/local/sbin/
 RUN php-setup.sh ${PHP_VERSION}
+WORKDIR /var/www/localhost/htdocs
 
 # wordpress setup
 ARG WP_VERSION
@@ -15,7 +16,6 @@ COPY PHP_LICENSE /
 COPY wordpress/WORDPRESS_LICENSE /
 
 # configuration
-WORKDIR /var/www/localhost/htdocs
 COPY httpd.conf /etc/apache2/
 COPY wordpress/db_dump/penkit-wp-$WP_VERSION.sql /usr/local/lib/penkit-wp.sql
 
