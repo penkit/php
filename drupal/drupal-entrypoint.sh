@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+sleep 3
+
 # wait for mysql to be available
 wait-for-it.sh $DRUPAL_DB_HOST:$DRUPAL_DB_PORT -t 45
 
